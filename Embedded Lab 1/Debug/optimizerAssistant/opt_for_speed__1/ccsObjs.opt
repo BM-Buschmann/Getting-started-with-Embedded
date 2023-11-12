@@ -1,0 +1,4 @@
+"./main.obj"
+"./user_code/src/gpio_utils.obj"
+"../lnk_msp430g2553.cmd"
+-llibc.a
