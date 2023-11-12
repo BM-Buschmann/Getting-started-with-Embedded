@@ -8,8 +8,8 @@ Dieses Repository ist den praktischen Übungen im Bereich Embedded Systems gewid
 
 ### Projektübersicht
 
-1. **Embedded Lab One**: Das "Hello World"-Projekt ist ein klassisches Einführungsprogramm, das als Ausgangspunkt für das Erlernen einer beliebigen Programmiersprache dient. In diesem Projekt wird ein einfaches Java-Programm entwickelt, das den Satz "Hello, World!" in der Konsole ausgibt.
-1. **Embedded Lab Two** *Übung 1*: In diesem Projekt werden die ersten Schritte zur Verwendung grundlegender Java-Syntaxstrukturen anhand eines Body-Mass-Index (BMI) Rechners erläutert. Es zeigt, wie Benutzereingaben entgegengenommen, Berechnungen durchgeführt und die Ergebnisse mit Java angezeigt werden.
+1. **Embedded Lab One**: Im Labor Microcomputertechnik 1 werden grundlegende Konzepte von digitalen Ein- und Ausgangsports sowie Mikrocontroller-Konfigurationen erkundet. Die Aufgaben umfassen LED-Blinken, die Verarbeitung von Benutzereingaben und modularisierte Finanzberechnungen mit dem MSP430 G2550 Chip. Die Labs legen Wert auf praktische Programmierung und das Verständnis der Registerinteraktion zur Steuerung verschiedener Funktionen.
+1. **Embedded Lab Two** Im Labor Microcomputertechnik 2 wird die Erkundung durch die Einführung von Eingangspins, Interrupts und komplexere Aufgabenkoordination erweitert. Es beinhaltet Aufgaben wie die Verarbeitung von Tastatureingaben, die Steuerung von LEDs basierend auf Tastendrücken und das Erzeugen musikalischer Töne mit dem MSP430 G2550 Chip. Das Labor vertieft das Verständnis von interruptgesteuerten Prozessen und erweitert den Einsatz von I/O-Ports.
 
 
 ### Erste Schritte
@@ -36,8 +36,8 @@ This repository is dedicated to hands-on embedded systems labs using the MSP430G
 
 ### Projects Overview
 
-1. **Embedded Lab One**:The "Hello World" project is a classic introductory program that serves as a starting point for learning any programming language. This project explores a simple Java program that prints the phrase "Hello, World!" to the console.
-1. **Embedded Lab Two** *Exercise 1*:This project explores the first steps of getting started with some basic Java syntax structures by implementing a Body Mass Index (BMI) calculator. Further it shows how to take user input, perform calculations, and display the results using Java.
+1. **Embedded Lab One**:Embedded Lab One explores the fundamental concepts of digital I/O ports and microcontroller configurations. It covers tasks such as LED blinking, user input handling, and modularized financial calculations using the MSP430 G2550 chip. The labs emphasize hands-on programming and understanding the interplay of registers to control various functionalities.
+1. **Embedded Lab Two** *Embedded Lab Two extends the exploration by introducing input pins, interrupts, and complex task coordination. It involves tasks like button input handling, LED control based on button presses, and generating musical tones using the MSP430 G2550 chip. The lab reinforces the understanding of interrupt-driven processes and expands on the use of I/O ports.
 
 ### Getting Started
 
