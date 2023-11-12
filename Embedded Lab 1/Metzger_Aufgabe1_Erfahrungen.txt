@@ -1,5 +1,0 @@
-Zuerst einmal möchte ich betonen, dass mir bewusst ist, dass der Ansatz zur Steuerung einer LED in diesem Codebeispiel für reale Anwendungen ungeeignet ist, da er ineffizient und blockierend ist. Mir wird dabei klar, dass die Optimierung des Codes durch Berücksichtigung von Ausführungsstrukturen und Zeitdiskretizität eine bedeutende Weiterentwicklung darstellen kann.
-
-In diesem Zusammenhang würde ich gerne vorschlagen, dass zukünftige Aufgabenstellungen vermehrt auf diese Aspekte, nämlich Ausführungsstrukturen und Zeitdiskretizität, eingehen. Dies könnte die Qualität und Relevanz der Aufgabenstellung steigern und uns als Lernende dabei unterstützen, noch weiter Fähigkeiten zu entwickeln.
-
-Abgesehen von dieser Anmerkung möchte ich hervorheben, dass ich mit der aktuellen Aufgabenstellung an sich keinerlei Schwierigkeiten hatte. Sie war klar formuliert und hat mir die Möglichkeit geboten, wichtige Konzepte zu verstehen und zu vertiefen. Ich schätze die Gelegenheit, an solchen Aufgaben zu arbeiten, und sehe sie als wertvolle Ergänzung zu meinem Lernprozess.

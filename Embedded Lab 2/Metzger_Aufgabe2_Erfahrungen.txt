@@ -1,5 +1,0 @@
-Während der Bearbeitung dieser Aufgaben hatte ich keine weiteren Schwierigkeiten, da ich bereits eine solide Grundlage in der Programmierung von Mikrocontrollern besitze. Die klaren Anweisungen halfen dabei, die Aufgaben schrittweise zu lösen und die Funktionalitäten zu implementieren. Die Verbindung von Tastern und LEDs sowie die Steuerung über den Mikrocontroller wurden durch die schrittweise Erweiterung der Funktionalitäten gut verständlich.
-
-Die Einführung von Interrupts in Aufgabe 1d) war zwar eine neue Herausforderung, aber durch die klare Anleitung und die vorherigen Aufgaben konnte ich die notwendigen Konfigurationen erfolgreich umsetzen.
-
-Als neachstes wuerde ich mir wuenschen das wir uns darauf konzentrieren, Programmcode angemessen zu strukturieren, einschließlich der Verwendung von Header-Dateien und Unterdateien.
