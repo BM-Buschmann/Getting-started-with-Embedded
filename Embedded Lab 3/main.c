@@ -1,14 +1,23 @@
 /**
  * @file    main.c
  * @brief   MSP430 Lab Embedded Programming
- * @details
+ * @details Implementation of a Simon Says game on uC-Labor Versuchsplatine V 2.3 msp430G2553. For further description if the task please read the README folder in the root of this directory.
  *
  * @hardware uC-Labor Versuchsplatine V 2.3 msp430G2553
+ * - PB5 connected to CON3:P1.3
+ * - PB6 connected to CON3:P1.4
+ * - PB7 connected to CON3:P1.5
+ * - Red LED (JP8-LED_RT) connected to CON3:P3.0
+ * - Green LED (JP8-LED_GN) connected to CON3:P3.1
+ * - Blue LED (JP8-LED_BL) connected to CON3:P3.2
  *
- *
- * @author  Bj�rn Metzger
- * @date    2023-11-11
- * @version 1.0
+ * @task part a 
+ * - The alternate function of the pinn is a heating element, aka if the jumper for the transistor is set to heater the signal on the pinn will trigger a transistor to swich to the on state and therfor zurrent will flow through the associated heating resistor.
+ * - But in our case the jumper pinn is set to only toggel the led as we dont need the heater functionality.
+ * 
+ * @author  Bjï¿½rn Metzger, Melvin Willburger
+ * @date    2023-11-16
+ * @version 3.0
  */
 
 //* ---------------------------------------- Includes ---------------------------------------------*/
@@ -23,20 +32,20 @@
 
 //* ----------------------------------------- Defines ---------------------------------------------*/
 
-#define LED_RED BIT0
-#define LED_GRN BIT1
-#define LED_BLU BIT2
+#define LED_RED (BIT0)
+#define LED_GRN (BIT1)
+#define LED_BLU (BIT2)
 
-#define BUTTON_ONE BIT3
-#define BUTTON_TWO BIT4
-#define BUTTON_THREE BIT5
+#define BUTTON_ONE (BIT3)
+#define BUTTON_TWO (BIT4)
+#define BUTTON_THREE (BIT5)
 
-#define PORT_ONE P1IN
-#define PORT_THREE P3OUT
+#define PORT_ONE (P1IN)
+#define PORT_THREE (P3OUT)
 
-#define SEQUENCE_COUNT 5
-#define NUMBER_OF_LEDS 3
-#define DEBOUNCE_DELAY_CYCLES 20000
+#define SEQUENCE_COUNT ((uint8_t)5)
+#define NUMBER_OF_LEDS ((uint8_t)3)
+#define DEBOUNCE_DELAY_CYCLES ((uint16_t)20000)
 
 //* --------------------------------------- Typedefines --------------------------------------------*/
 
@@ -52,36 +61,29 @@ enum ExecutionState
 
 typedef struct ledSequence
 {
-    uint8_t ledOrder[NUMBER_OF_LEDS];
-    uint16_t onTime;
-    uint16_t offTime;
+    uint8_t u8_LedOrder[NUMBER_OF_LEDS];
+    uint16_t u8_OnTime;
+    uint16_t u8_OffTime;
 } ledSequence;
 
 //* -------------------------------------- Variable Declarations ------------------------------------------*/
 
 // LED sequences
 ledSequence sequences[SEQUENCE_COUNT] = {
-    {{LED_RED, LED_GRN, LED_BLU}, 2000, 2000},
-    {{LED_GRN, LED_BLU, LED_RED}, 1000, 1000},
-    {{LED_BLU, LED_RED, LED_GRN}, 500, 500},
-    {{LED_RED, LED_BLU, LED_GRN}, 300, 300},
-    {{LED_GRN, LED_RED, LED_BLU}, 100, 100}};
+    {{LED_RED, LED_GRN, LED_BLU}, (uint16_t)2000, (uint16_t)2000},
+    {{LED_GRN, LED_BLU, LED_RED}, (uint16_t)1000, (uint16_t)1000},
+    {{LED_BLU, LED_RED, LED_GRN}, (uint16_t)500, (uint16_t)500},
+    {{LED_RED, LED_BLU, LED_GRN}, (uint16_t)300, (uint16_t)300},
+    {{LED_GRN, LED_RED, LED_BLU}, (uint16_t)100, (uint16_t)100}};
 
 // User input array and control variables
-uint8_t ledOrderUserInput[NUMBER_OF_LEDS];
-uint8_t currentSequenceIndex = 0;
-uint8_t currentExecutionState = stateNull;
-
-// Flag to check current LED status
-uint8_t curentLedStatus = 0;
+uint8_t u8_LedOrderUserInput[NUMBER_OF_LEDS];
+uint8_t u8_CurrentSequenceIndex = ((uint8_t)0);
+uint8_t u8_CurrentExecutionState = stateNull;
 
 // Timer-related variables
-volatile uint16_t timerCount = 0;
-volatile uint8_t ledIndex = 0;
-
-// Flags for control flow
-bool userInputFalse = false;
-bool lastSequence = false;
+volatile uint16_t u16_TimerCount = ((uint16_t)0);
+volatile uint8_t u16_LedIndex = ((uint16_t)0);
 
 //* -------------------------------------- Method Declarations ------------------------------------------*/
 
@@ -90,7 +92,7 @@ void initialize(void);
 
 // Animation methods
 void playStartAnimation(void);
-void playCurrentSequenceAnimation(ledSequence *currentSequence);
+void playCurrentSequenceAnimation(ledSequence *p_CurrentSequence);
 void playRoundWonAnimation(void);  // renamed the roundwon() method to playRoundWonAnimation() to fit the naming sheme
 void playRoundLostAnimation(void); // renamed the roundlost() method to playRoundLostAnimation() to fit the naming sheme
 void playGameWonAnimation(void);   // renamed the  gamewon() method to playGameWonAnimation() to fit the naming sheme
@@ -100,63 +102,63 @@ void startTimer(void);
 void stopTimer(void);
 
 // User input methods
-void collectUserInput(uint8_t *ledOrderUserInput);
+void collectUserInput(uint8_t *p_LedOrderUserInput);
 
 // Helper methods
-bool compareArrays(uint8_t *array1, uint8_t *array2);
-bool debounceInput(uint8_t port, uint8_t pin);
+bool compareArrays(uint8_t *p_Array1, uint8_t *p_Array2);
+bool debounceInput(uint8_t u8_Port, uint8_t u8_Pin);
 
 //* ---------------------------------------- Definitions ------------------------------------------*/
 int main(void)
 {
-    bool result = false;
+    bool b_Result = false;
 
     initialize();
 
     while (1)
     {
-        switch (currentExecutionState)
+        switch (u8_CurrentExecutionState)
         {
         case stateNull: // Play starting animation
             if (debounceInput(PORT_ONE, BUTTON_ONE) || debounceInput(PORT_ONE, BUTTON_TWO) || debounceInput(PORT_ONE, BUTTON_THREE))
             {
                 playStartAnimation();
-                currentExecutionState = stateOne; // Move to the next execution state
+                u8_CurrentExecutionState = stateOne; // Move to the next execution state
             }
             break;
 
         case stateOne: // Play LED sequence for the user
-            playCurrentSequenceAnimation(&sequences[currentSequenceIndex]);
-            currentExecutionState = stateTwo;
+            playCurrentSequenceAnimation(&sequences[u8_CurrentSequenceIndex]);
+            u8_CurrentExecutionState = stateTwo;
             break;
 
         case stateTwo: // Collect user input
-            collectUserInput(&ledOrderUserInput);
-            currentExecutionState = stateThree;
+            collectUserInput(&u8_LedOrderUserInput);
+            u8_CurrentExecutionState = stateThree;
             break;
 
         case stateThree: // Compare user input and played sequence
 
-            result = compareArrays(&sequences[currentSequenceIndex].ledOrder, &ledOrderUserInput);
+            b_Result = compareArrays(&sequences[u8_CurrentSequenceIndex].u8_LedOrder, &u8_LedOrderUserInput);
 
-            if (result && currentSequenceIndex == 5) // User input identical to displayed sequence for the last round
+            if (b_Result && u8_CurrentSequenceIndex == ((uint8_t)5)) // User input identical to displayed sequence for the last round
             {
                 playGameWonAnimation();
                 playStartAnimation();
-                currentSequenceIndex = 0;
-                currentExecutionState = stateNull;
+                u8_CurrentSequenceIndex = ((uint8_t)0);
+                u8_CurrentExecutionState = stateNull;
             }
-            else if (result) // User input identical to displayed sequence
+            else if (b_Result) // User input identical to displayed sequence
             {
                 playRoundWonAnimation();
-                currentSequenceIndex++; // Increment the current sequence index
-                currentExecutionState = stateOne;
+                u8_CurrentSequenceIndex++; // Increment the current sequence index
+                u8_CurrentExecutionState = stateOne;
             }
             else // User input not identical to displayed sequence
             {
                 playRoundLostAnimation();
-                currentSequenceIndex = 0; // Reset the current sequence index
-                currentExecutionState = stateNull;
+                u8_CurrentSequenceIndex = ((uint8_t)0); // Reset the current sequence index
+                u8_CurrentExecutionState = stateNull;
             }
             break;
 
@@ -190,7 +192,7 @@ void initialize()
 
     // Configure Timer A
     TA0CTL = TASSEL_2 + MC_0 + TACLR; // Use the SMCLK as the clock source, disable timer for now, clear timer
-    TA0CCR0 = 1000;                   // Set CCR0 to produce 100 ms per count
+    TA0CCR0 = ((uint8_t)1000);          // Set CCR0 to produce 100 ms per count
     TA0CCTL0 &= ~CCIE;                // Enable the interrupt for CCR0
 
     __enable_interrupt(); // Enable global interrupts
@@ -205,7 +207,7 @@ void initialize()
 void playStartAnimation()
 {
     PORT_THREE |= (LED_RED + LED_GRN + LED_BLU);  // Turn on all LEDs
-    __delay_cycles(2000000);                      // Delay for 2 seconds
+    __delay_cycles((uint32_t)2000000);            // Delay for 2 seconds
     PORT_THREE &= ~(LED_RED + LED_GRN + LED_BLU); // Turn off all LEDs
 }
 
@@ -215,35 +217,35 @@ void playStartAnimation()
  * This function plays the animation based on the LED sequence provided.
  * It toggles LEDs according to the sequence's on and off times using a timer.
  *
- * @param currentSequence Pointer to the LED sequence structure.
+ * @param p_CurrentSequence Pointer to the LED sequence structure.
  */
-void playCurrentSequenceAnimation(ledSequence *currentSequence)
+void playCurrentSequenceAnimation(ledSequence *p_CurrentSequence)
 {
     startTimer(); // Start the timer for animation
 
-    uint8_t curentLedIndex = 0; // Declare curentLedIndex within the method
+    uint8_t u8_CurentLedIndex = 0; // Declare u8_CurentLedIndex within the method
 
-    while (curentLedIndex < NUMBER_OF_LEDS)
+    while (u8_CurentLedIndex < NUMBER_OF_LEDS)
     {
-        uint8_t currentLedPin = currentSequence->ledOrder[curentLedIndex];
-        uint16_t currentPeriodTime = currentSequence->offTime + currentSequence->onTime;
+        uint8_t u8_CurrentLedPin = p_CurrentSequence->u8_LedOrder[u8_CurentLedIndex];
+        uint16_t u16_CurrentPeriodTime = p_CurrentSequence->u8_OffTime + p_CurrentSequence->u8_OnTime;
 
-        if (timerCount >= currentPeriodTime)
+        if (u16_TimerCount >= u16_CurrentPeriodTime)
         {
-            timerCount = 0;
-            curentLedIndex++;
+            u16_TimerCount = 0;
+            u8_CurentLedIndex++;
         }
         else
         {
             // If the current time is within the "on" time and the LEDs are off, turn them on
-            if ((timerCount <= currentSequence->onTime) && !(PORT_THREE & currentLedPin))
+            if ((u16_TimerCount <= p_CurrentSequence->u8_OnTime) && !(PORT_THREE & u8_CurrentLedPin))
             {
-                PORT_THREE |= currentLedPin; // Turn on all LEDs
+                PORT_THREE |= u8_CurrentLedPin; // Turn on all LEDs
             }
             // If the current time is greater than 250 and the LEDs are on, turn them off
-            else if ((timerCount > currentSequence->onTime) && (PORT_THREE & currentLedPin))
+            else if ((u16_TimerCount > p_CurrentSequence->u8_OnTime) && (PORT_THREE & u8_CurrentLedPin))
             {
-                PORT_THREE &= ~currentLedPin;
+                PORT_THREE &= ~u8_CurrentLedPin;
             }
             else
             {
@@ -265,26 +267,26 @@ void playRoundWonAnimation()
 {
     startTimer(); // Start the timer for animation
 
-    uint8_t curentLedIndex = 0;
+    uint8_t u8_CurentLedIndex = ((uint8_t)0);
 
-    uint16_t currentPeriodTime = 500; // 500ms for each state (on and off)
+    uint16_t u16_CurrentPeriodTime = ((uint16_t)500); // 500ms for each state (on and off)
 
-    while (curentLedIndex < 4) // Repeat the sequence twice
+    while (u8_CurentLedIndex < ((uint8_t)4)) // Repeat the sequence four times
     {
-        if (timerCount >= currentPeriodTime)
+        if (u16_TimerCount >= u16_CurrentPeriodTime)
         {
-            timerCount = 0;
-            curentLedIndex++;
+            u16_TimerCount = ((uint8_t)0);
+            u8_CurentLedIndex++;
         }
         else
         {
             // If the current time is within the "on" time and the LEDs are off, turn them on
-            if ((timerCount <= 250) && !(PORT_THREE & (LED_RED + LED_GRN + LED_BLU)))
+            if ((u16_TimerCount <= ((uint8_t)250)) && !(PORT_THREE & (LED_RED + LED_GRN + LED_BLU)))
             {
                 PORT_THREE |= (LED_RED + LED_GRN + LED_BLU); // Turn on all LEDs
             }
             // If the current time is greater than 250 and the LEDs are on, turn them off
-            else if ((timerCount > 250) && (PORT_THREE & (LED_RED + LED_GRN + LED_BLU)))
+            else if ((u16_TimerCount > ((uint8_t)250)) && (PORT_THREE & (LED_RED + LED_GRN + LED_BLU)))
             {
                 PORT_THREE &= ~(LED_RED + LED_GRN + LED_BLU);
             }
@@ -308,33 +310,33 @@ void playRoundLostAnimation()
 {
     startTimer(); // Start the timer for animation
 
-    uint8_t curentLedIndex = 0;
+    uint8_t u8_CurentLedIndex = 0;
 
-    while (curentLedIndex < 3) // Repeat the sequence three times
+    while (u8_CurentLedIndex < ((uint8_t)3)) // Repeat the sequence three times
     {
-        uint16_t currentPeriodTime = 1000; // 1000ms for each cycle
+        uint16_t u16_CurrentPeriodTime = ((uint16_t)1000); // 1000ms for each cycle
 
-        if (timerCount >= currentPeriodTime) // If the loop reached the desired period rool over to 0 and start again
+        if (u16_TimerCount >= u16_CurrentPeriodTime) // If the loop reached the desired period rool over to 0 and start again
         {
-            timerCount = 0;
-            curentLedIndex++;
+            u16_TimerCount = ((uint16_t)0);
+            u8_CurentLedIndex++;
         }
         else
         {
             // If the current time is within the "on" time and the LEDs are off, turn them on
-            if ((timerCount <= 333))
+            if ((u16_TimerCount <= ((uint16_t)333)))
             {
                 PORT_THREE |= LED_BLU; // Turn on all LEDs
                 PORT_THREE &= ~(LED_RED + LED_GRN);
             }
             // If the current time is greater than 333 and less than or equal to 666, turn on the red LED
-            else if ((timerCount > 333) && (timerCount <= 666))
+            else if ((u16_TimerCount > ((uint16_t)333)) && (u16_TimerCount <= ((uint16_t)666)))
             {
                 PORT_THREE |= LED_RED; // Turn on the red LED
                 PORT_THREE &= ~(LED_GRN + LED_BLU);
             }
             // If the current time is greater than 666, turn on the green LED
-            else if ((timerCount > 666))
+            else if ((u16_TimerCount > ((uint16_t)666)))
             {
                 PORT_THREE |= LED_GRN; // Turn on the green LED
                 PORT_THREE &= ~(LED_RED + LED_BLU);
@@ -359,33 +361,33 @@ void playGameWonAnimation()
 {
     startTimer(); // Start the timer for animation
 
-    uint8_t curentLedIndex = 0;
+    uint8_t u8_CurentLedIndex = 0;
 
-    while (curentLedIndex < 3) // Repeat the sequence three times
+    while (u8_CurentLedIndex < ((uint8_t)3)) // Repeat the sequence three times
     {
-        uint16_t currentPeriodTime = 1000; // 1000ms for each cycle
+        uint16_t u16_CurrentPeriodTime = ((uint16_t)1000); // 1000ms for each cycle
 
-        if (timerCount >= currentPeriodTime)
+        if (u16_TimerCount >= u16_CurrentPeriodTime)
         {
-            timerCount = 0;
-            curentLedIndex++;
+            u16_TimerCount = ((uint16_t)0);
+            u8_CurentLedIndex++;
         }
         else
         {
             // If the current time is within the "on" time and the LEDs are off, turn them on
-            if ((timerCount <= 333))
+            if ((u16_TimerCount <= ((uint16_t)333)))
             {
                 PORT_THREE |= LED_BLU; // Turn on all LEDs
                 PORT_THREE &= ~(LED_GRN + LED_RED);
             }
             // If the current time is greater than 333 and less than or equal to 666, turn on the green LED
-            else if ((timerCount > 333) && (timerCount <= 666))
+            else if ((u16_TimerCount > ((uint16_t)333)) && (u16_TimerCount <= ((uint16_t)666)))
             {
                 PORT_THREE |= LED_GRN; // Turn on the green LED
                 PORT_THREE &= ~(LED_RED + LED_BLU);
             }
             // If the current time is greater than 666, turn on the red LED
-            else if ((timerCount > 666))
+            else if ((u16_TimerCount > ((uint16_t)666)))
             {
                 PORT_THREE |= LED_RED; // Turn on the red LED
                 PORT_THREE &= ~(LED_BLU + LED_GRN);
@@ -432,20 +434,20 @@ void stopTimer()
  * The order in which the buttons have been pressed is stored in the array ledOrderUserInput.
  * Debouncing is applied to the button inputs using the debounceInput function.
  *
- * @param ledOrderUserInput Pointer to the array where the user input will be stored.
+ * @param p_LedOrderUserInput Pointer to the array where the user input will be stored.
  */
-void collectUserInput(uint8_t *ledOrderUserInput)
+void collectUserInput(uint8_t *p_LedOrderUserInput)
 {
-    uint8_t currentIndex = 0;
+    uint8_t u8_CurrentIndex = ((uint8_t)0);
 
     // Continue polling buttons until all three buttons are pressed
-    while (currentIndex < NUMBER_OF_LEDS)
+    while (u8_CurrentIndex < NUMBER_OF_LEDS)
     {
         if (debounceInput(PORT_ONE, BUTTON_ONE))
         {
             // Button one is pressed, store it in the array
-            ledOrderUserInput[currentIndex] = LED_RED;
-            currentIndex++;
+            p_LedOrderUserInput[u8_CurrentIndex] = LED_RED;
+            u8_CurrentIndex++;
             while (debounceInput(PORT_ONE, BUTTON_ONE))
             {
                 // Wait for button release to avoid multiple presses being registered
@@ -454,8 +456,8 @@ void collectUserInput(uint8_t *ledOrderUserInput)
         else if (debounceInput(PORT_ONE, BUTTON_TWO))
         {
             // Button two is pressed, store it in the array
-            ledOrderUserInput[currentIndex] = LED_GRN;
-            currentIndex++;
+            p_LedOrderUserInput[u8_CurrentIndex] = LED_GRN;
+            u8_CurrentIndex++;
             while (debounceInput(PORT_ONE, BUTTON_TWO))
             {
                 // Wait for button release to avoid multiple presses being registered
@@ -464,8 +466,8 @@ void collectUserInput(uint8_t *ledOrderUserInput)
         else if (debounceInput(PORT_ONE, BUTTON_THREE))
         {
             // Button three is pressed, store it in the array
-            ledOrderUserInput[currentIndex] = LED_BLU;
-            currentIndex++;
+            p_LedOrderUserInput[u8_CurrentIndex] = LED_BLU;
+            u8_CurrentIndex++;
             while (debounceInput(PORT_ONE, BUTTON_THREE))
             {
                 // Wait for button release to avoid multiple presses being registered
@@ -479,17 +481,17 @@ void collectUserInput(uint8_t *ledOrderUserInput)
  *
  * This function compares two arrays to check if they are identical.
  *
- * @param array1 Pointer to the first array.
- * @param array2 Pointer to the second array.
- * @param size Size of the arrays.
+ * @param p_Array1 Pointer to the first array.
+ * @param p_Array2 Pointer to the second array.
  * @return true if the arrays are identical, false otherwise.
  */
-bool compareArrays(uint8_t *array1, uint8_t *array2)
+bool compareArrays(uint8_t *p_Array1, uint8_t *p_Array2)
 {
-    uint8_t arrayIndex;
-    for (arrayIndex = NUMBER_OF_LEDS; arrayIndex > 0; arrayIndex--)
+    uint8_t u8_ArrayIndex = ((uint8_t)0);
+
+    for (u8_ArrayIndex = NUMBER_OF_LEDS; u8_ArrayIndex > ((uint8_t)0); u8_ArrayIndex--)
     {
-        if (array1[arrayIndex] != array2[arrayIndex])
+        if (p_Array1[u8_ArrayIndex] != p_Array2[u8_ArrayIndex])
         {
             // Arrays are not identical
             return false;
@@ -506,36 +508,38 @@ bool compareArrays(uint8_t *array1, uint8_t *array2)
  * This function debounces a button input by checking its state over time.
  * It uses a time delay to filter out spurious signals and provide a stable button state.
  *
- * @param port Port register of the button pin.
- * @param pin Pin number of the button.
+ * @param u8_Port Port register of the button pin.
+ * @param u8_Pin Pin number of the button.
  * @return 1 if the button is pressed after debouncing, 0 otherwise.
  */
-bool debounceInput(uint8_t port, uint8_t pin)
+bool debounceInput(uint8_t u8_Port, uint8_t u8_Pin)
 {
-    bool buttonState = false; // Default to not pressed
+    bool b_ButtonState = false; // Default to not pressed
 
-    if (!(port & pin))
+    if (!(u8_Port & u8_Pin))
     {
-        buttonState = true; // Set state to pressed
+        b_ButtonState = true; // Set state to pressed
 
         __delay_cycles(DEBOUNCE_DELAY_CYCLES); // Wait for a time gap to debounce the button input signal
 
-        if (port & pin)
+        if (u8_Port & u8_Pin)
         {
-            buttonState = false; // It turned out the signal was a fluke; reset the state
+            b_ButtonState = false; // It turned out the signal was a fluke; reset the state
         }
     }
 
-    return buttonState;
+    return b_ButtonState;
 }
 
 //* ----------------------------------------- Interrupts -------------------------------------------*/
 
 // Timer A0 interrupt service routine
-// Timer A0 interrupt service routine
 #pragma vector = TIMER0_A0_VECTOR
 __interrupt void Timer_A(void)
 {
-    timerCount++;
+    CCTL0 &= ~CCIE; // Disable interrupt vectors for CCR0
+    u16_TimerCount++;
+    CCTL0 |= CCIE; // Enable interrupt vectors for CCR0
+
     TACTL &= ~TAIFG; // clear interrupt Flag
 }
