@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs1240/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS
+CG_TOOL_ROOT := C:/ti/ccs1270/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -120,10 +120,10 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-Embedded\ Lab\ 3.out \
+Embedded\ Lab\ 3.out 
 
 EXE_OUTPUTS__QUOTED += \
-"Embedded Lab 3.out" \
+"Embedded Lab 3.out" 
 
 
 # All Target
@@ -134,7 +134,7 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 Embedded\ Lab\ 3.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: MSP430 Linker'
-	"C:/ti/ccs1240/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/bin/cl430" -vmsp --use_hw_mpy=none --advice:power=all --define=__MSP430G2553__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number -z -m"Embedded Lab 3.map" --heap_size=80 --stack_size=80 -i"C:/ti/ccs1240/ccs/ccs_base/msp430/include" -i"C:/ti/ccs1240/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/lib" -i"C:/ti/ccs1240/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Embedded Lab 3_linkInfo.xml" --use_hw_mpy=none --rom_model -o "Embedded Lab 3.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1270/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/bin/cl430" -vmsp --use_hw_mpy=none --advice:power=all --define=__MSP430G2553__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number -z -m"Embedded Lab 3.map" --heap_size=80 --stack_size=80 -i"C:/ti/ccs1270/ccs/ccs_base/msp430/include" -i"C:/ti/ccs1270/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/lib" -i"C:/ti/ccs1270/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Embedded Lab 3_linkInfo.xml" --use_hw_mpy=none --rom_model -o "Embedded Lab 3.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
