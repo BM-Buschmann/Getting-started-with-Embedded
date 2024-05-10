@@ -7,7 +7,7 @@
  * capacitor colors, as well as functions to clamp values and convert them to percentages.
  *
  * @date    10.05.2024
- * @author  Bjoern Metzger
+ * @author  Bjoern Metzger & Daniel Korobow
  * @version 1.0
  */
 

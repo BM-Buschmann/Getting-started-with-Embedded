@@ -24,7 +24,7 @@
  * serial interface. Note: The LDR requires a few milliseconds to adjust to abrupt changes in light values.
  *
  * @date    10.05.2024
- * @author  Bjoern Metzger 
+ * @author  Bjoern Metzger & Daniel Korobow
  * @version 1.0
  */
 

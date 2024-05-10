@@ -6,7 +6,7 @@
  * ADC values in StringDisplay.c.
  *
  * @date    10.05.2024
- * @author  Bjoern Metzger
+ * @author  Bjoern Metzger & Daniel Korobow
  */
 
 #ifndef STRINGDISPLAY_H_

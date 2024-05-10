@@ -6,7 +6,7 @@
  * components such as LEDs, buttons, and the Analog to Digital Converter (ADC).
  *
  * @date    10.05.2024
- * @author  Bjoern Metzger
+ * @author  Bjoern Metzger & Daniel Korobow
  * @version 1.0
  */
 

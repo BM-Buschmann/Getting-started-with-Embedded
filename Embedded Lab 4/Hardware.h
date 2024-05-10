@@ -6,7 +6,7 @@
  * and control in Hardware.c.
  *
  * @date    10.05.2024
- * @author  Bjoern Metzger
+ * @author  Bjoern Metzger & Daniel Korobow
  */
 
 #ifndef HARDWARE_H_
