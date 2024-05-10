@@ -1,7 +1,7 @@
 {
-    "makefile.makePath": "C:\\ti\\ccs1270\\ccs\\utils\\bin\\gmake.exe",
-    "makefile.makefilePath": "./Debug",
     "files.associations": {
-        "templateemp.h": "c"
+        "templateemp.h": "c",
+        "hardware.h": "c",
+        "stringdisplay.h": "c"
     }
 }

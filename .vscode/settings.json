@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "templateemp.h": "c",
-        "hardware.h": "c",
-        "stringdisplay.h": "c"
-    }
-}
