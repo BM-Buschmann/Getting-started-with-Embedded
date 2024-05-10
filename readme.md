@@ -1,34 +1,12 @@
-# English Version
+# Microcomputer Technology Laboratory - Electrical Engineering Program
 
-## Lab Projects - Microcomputer Technik DHBW Lörrach - Semester 3 and 4
+## English Version
 
-This repository contains lab projects completed as part of the Microcomputer Technik course at DHBW Lörrach during Semesters 3 and 4 in the Electrical Engineering program.
+Welcome to the repository for Microcomputer Technology Laboratory projects undertaken during Semester 3 and 4 of the Electrical Engineering program at DHBW Lörrach.
 
 ### About
 
-These lab projects were created using Code Composer Studio (CCS), a fully integrated development environment (IDE) for Texas Instruments embedded processors. Each project focuses on various aspects of microcontroller programming, hardware interfacing, and embedded systems development.
-
-### Instructions for Importing Projects into CCS
-
-1. **Download Code Composer Studio (CCS)**: If you haven't already, download and install Code Composer Studio from the [official website](http://www.ti.com/tool/CCSTUDIO).
-   
-2. **Clone or Download this Repository**: Clone this repository to your local machine or download it as a ZIP file and extract it to a local directory.
-
-3. **Open CCS**: Launch Code Composer Studio.
-
-4. **Import Project**: 
-   - In the CCS menu, go to **File > Import...**.
-   - Choose **Code Composer Studio > CCS Projects** and click **Next**.
-   - Select the root folder of the lab project you want to import (e.g., LabProjectX) and click **Next**.
-   - Ensure that the correct project is selected in the list, then click **Finish**.
-
-5. **Build the Project**: Once the project is imported, you can build it by selecting the project in the Project Explorer view, right-clicking, and choosing **Build Project**.
-
-6. **Configure the Target Device**: If prompted, configure the target device and debug probe settings for your specific hardware setup.
-
-7. **Run the Project**: After building the project successfully, you can run it on your target hardware by selecting **Run > Debug** or **Run > Run** from the CCS menu.
-
-8. **Explore and Modify**: Feel free to explore the project files and make modifications as needed for your learning or project requirements.
+This repository contains solutions and resources for laboratory assignments in the Microcomputer Technology course. All projects were developed using Code Composer Studio (CCS).
 
 ### Disclaimer
 
@@ -42,40 +20,33 @@ These lab projects were created using Code Composer Studio (CCS), a fully integr
 
 By accessing and using the solutions in this repository, users acknowledge and agree to the terms outlined in this disclaimer.
 
+### Getting Started
 
+To import the projects into Code Composer Studio (CCS), follow these steps:
+1. Clone or download the repository to your local machine.
+2. Open Code Composer Studio.
+3. Select 'File' > 'Import'.
+4. Choose 'Code Composer Studio' > 'CCS Projects'.
+5. Click 'Next' and browse to the location of the cloned/downloaded repository.
+6. Select the projects you want to import and click 'Finish'.
 
+### Contributors
 
-# German Version
+- B Metzger
 
-## Laborprojekte - Mikrocomputertechnik DHBW Lörrach - Semester 3 und 4
+### License
 
-Dieses Repository enthält Laborprojekte, die im Rahmen des Kurses Mikrocomputertechnik an der DHBW Lörrach in den Semestern 3 und 4 im Studiengang Elektrotechnik durchgeführt wurden.
+This repository is licensed under the [MIT License](LICENSE).
 
-### Überblick
+---
 
-Diese Laborprojekte wurden mit Code Composer Studio (CCS) erstellt, einer vollständig integrierten Entwicklungsumgebung (IDE) für eingebettete Prozessoren von Texas Instruments. Jedes Projekt konzentriert sich auf verschiedene Aspekte der Mikrocontroller-Programmierung, der Hardware-Interaktion und der Entwicklung von eingebetteten Systemen.
+## German Version
 
-### Anleitung zum Importieren der Projekte in CCS
+Willkommen im Repository für Mikrocomputertechnik Laborprojekte im Rahmen des Studiengangs Elektrotechnik während des dritten und vierten Semesters an der DHBW Lörrach.
 
-1. **Code Composer Studio (CCS) herunterladen**: Laden Sie Code Composer Studio von der [offiziellen Website](http://www.ti.com/tool/CCSTUDIO) herunter und installieren Sie es, falls noch nicht geschehen.
+### Über
 
-2. **Repository klonen oder herunterladen**: Klonen Sie dieses Repository auf Ihren lokalen Rechner oder laden Sie es als ZIP-Datei herunter und entpacken Sie es in ein lokales Verzeichnis.
-
-3. **CCS öffnen**: Starten Sie Code Composer Studio.
-
-4. **Projekt importieren**: 
-   - Im CCS-Menü gehen Sie zu **File > Import...**.
-   - Wählen Sie **Code Composer Studio > CCS Projects** und klicken Sie auf **Next**.
-   - Wählen Sie den Stammordner des Laborprojekts aus, das Sie importieren möchten (z. B. LabProjectX) und klicken Sie auf **Next**.
-   - Stellen Sie sicher, dass das richtige Projekt in der Liste ausgewählt ist, und klicken Sie auf **Finish**.
-
-5. **Projekt erstellen**: Nachdem das Projekt erfolgreich importiert wurde, können Sie es erstellen, indem Sie es im Project Explorer auswählen, mit der rechten Maustaste darauf klicken und **Build Project** auswählen.
-
-6. **Zielgerät konfigurieren**: Falls erforderlich, konfigurieren Sie das Zielgerät und die Einstellungen für den Debug-Probe entsprechend Ihrer spezifischen Hardwarekonfiguration.
-
-7. **Projekt ausführen**: Nach erfolgreichem Erstellen des Projekts können Sie es auf Ihrer Zielhardware ausführen, indem Sie im CCS-Menü **Run > Debug** oder **Run > Run** auswählen.
-
-8. **Projekt erkunden und anpassen**: Erkunden Sie die Projektdateien und nehmen Sie bei Bedarf Anpassungen vor, um Ihre Lern- oder Projektanforderungen zu erfüllen.
+Dieses Repository enthält Lösungen und Ressourcen für Laboraufgaben im Kurs Mikrocomputertechnik. Alle Projekte wurden unter Verwendung von Code Composer Studio (CCS) entwickelt.
 
 ### Haftungsausschluss
 
@@ -88,3 +59,21 @@ Diese Laborprojekte wurden mit Code Composer Studio (CCS) erstellt, einer vollst
 **Zuordnung der Aufgaben**: Alle Aufgaben in diesem Repository wurden vom Kursleiter oder der Bildungseinrichtung bereitgestellt. Die hier präsentierten Lösungen sind das Ergebnis unabhängiger Anstrengungen und dienen als Ressource zur Ergänzung des Lernprozesses.
 
 Durch den Zugriff und die Verwendung der Lösungen in diesem Repository erkennen die Benutzer die in diesem Haftungsausschluss festgelegten Bedingungen an und stimmen diesen zu.
+
+### Erste Schritte
+
+Um die Projekte in Code Composer Studio (CCS) zu importieren, befolgen Sie diese Schritte:
+1. Klone oder lade das Repository auf deinen lokalen Computer herunter.
+2. Öffne Code Composer Studio.
+3. Wähle 'Datei' > 'Importieren'.
+4. Wähle 'Code Composer Studio' > 'CCS-Projekte'.
+5. Klicke auf 'Weiter' und navigiere zum Speicherort des geklonten/heruntergeladenen Repositorys.
+6. Wähle die Projekte aus, die du importieren möchtest, und klicke auf 'Fertigstellen'.
+
+### Mitwirkende
+
+- B Metzger
+
+### Lizenz
+
+Dieses Repository steht unter der [MIT-Lizenz](LICENSE).
