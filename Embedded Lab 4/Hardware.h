@@ -5,7 +5,7 @@
  * This file contains declarations of functions and enums used for hardware initialization
  * and control in Hardware.c.
  *
- * @date    10.05.2024
+ * @date    25.05.2024
  * @author  Bjoern Metzger & Daniel Korobow
  */
 

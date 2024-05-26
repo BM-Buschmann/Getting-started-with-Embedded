@@ -23,7 +23,7 @@
  * (either "White", "Black", or "No chip") formatted with four-digit numbers, right-aligned, to the computer via the
  * serial interface. Note: The LDR requires a few milliseconds to adjust to abrupt changes in light values.
  *
- * @date    10.05.2024
+ * @date    25.05.2024
  * @author  Bjoern Metzger & Daniel Korobow
  * @version 1.0
  */

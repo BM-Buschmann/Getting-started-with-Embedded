@@ -5,7 +5,7 @@
  * This file contains declarations of functions and enums used for formatting and displaying
  * ADC values in StringDisplay.c.
  *
- * @date    10.05.2024
+ * @date    25.05.2024
  * @author  Bjoern Metzger & Daniel Korobow
  */
 

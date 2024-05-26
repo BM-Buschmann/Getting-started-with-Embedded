@@ -1,0 +1,8 @@
+Feedback:
+
+Insgesamt fand ich das Projekt sehr informativ. Die bereitgestellten Anweisungen waren klar, und die Aufgaben haben mir geholfen, ein besseres Verständnis für die Arbeit mit Mikrocontrollern und verschiedenen Hardwarekomponenten zu entwickeln.
+
+Ein Bereich, in dem ich einige Schwierigkeiten hatte, war die Implementierung der Mehrkanal-ADC-Konvertierung. Während die Anweisungen die einkanalige ADC-Konvertierung angemessen behandelten, hätte ich mir mehr Beispiele oder Anleitungen speziell für die Mehrkanal-Konvertierung gewünscht. Es wäre hilfreich gewesen, klarere Beispiele oder Erklärungen dazu zu haben, wie man mehrere ADC-Kanäle gleichzeitig einrichtet und ausliest.
+
+Insgesamt glaube ich, dass ein wenig mehr Beispielcode und detaillierte Erklärungen für die Mehrkanal-ADC-Konvertierung das Lernerlebnis verbessert hätten.
+

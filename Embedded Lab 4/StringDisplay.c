@@ -6,7 +6,7 @@
  * It includes functions to convert ADC values to graphical representations (gages) and
  * capacitor colors, as well as functions to clamp values and convert them to percentages.
  *
- * @date    10.05.2024
+ * @date    25.05.2024
  * @author  Bjoern Metzger & Daniel Korobow
  * @version 1.0
  */

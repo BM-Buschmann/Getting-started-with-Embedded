@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v21.6.1                     
 ******************************************************************************
->> Linked Sat Nov 11 20:32:05 2023
+>> Linked Sat May 25 17:33:31 2024
 
 OUTPUT FILE NAME:   <Embedded Lab 2.0.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000c44e
@@ -156,7 +156,7 @@ MODULE SUMMARY
     +--+----------------------------+------+---------+---------+
        Total:                       818    22        36     
                                                             
-    C:\ti\ccs1250\ccs\tools\compiler\ti-cgt-msp430_21.6.1.LTS\lib\rts430_eabi.lib
+    C:\ti\ccs1270\ccs\tools\compiler\ti-cgt-msp430_21.6.1.LTS\lib\rts430_eabi.lib
        copy_decompress_lzss.c.obj   124    0         0      
        lsr16.asm.obj                76     0         0      
        autoinit.c.obj               66     0         0      
