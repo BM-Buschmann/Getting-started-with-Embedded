@@ -1,1 +1,7 @@
 /Debug/
+
+# Ignore all .xlsx files
+*.xlsx
+
+# Ignore all .txt files
+*.txt

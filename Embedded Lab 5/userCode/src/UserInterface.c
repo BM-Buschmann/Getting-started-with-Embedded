@@ -139,7 +139,7 @@ void getUserSelectedTones(NOTE *selectedTones, uint16_t maxTones)
             if (isJoystickPressed() == JOYSTICK_PRESSED)
             {
                 selectedTones[toneIndex++] = currentNote;
-                playNote(currentNote, 1);
+                //playNote(currentNote, 1); // NOT TO shure if the note needs to be played after selection therfor i uncommented it here.
                 clearScreen(); // Clear the screen after selecting a tone
                 if (toneIndex < maxTones)
                 {

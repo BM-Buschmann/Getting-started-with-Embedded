@@ -1,5 +1,6 @@
-/Debug/
+/Workspace/
 
+/.vscode/
 # Ignore all .xlsx files
 *.xlsx
 
