@@ -1,82 +1,44 @@
 #include <templateEMP.h>
 #include <stdint.h>
-#include <lcd.h>
+#include <stdio.h>
 
-#include <LCD.h>
 #include "./userCode/inc/Scheduler.h"
-#include "./userCode/inc/Clock.h"	 // Include the clock module header
-#include "./userCode/inc/Hardware.h" // Include the clock module header
+#include "./userCode/inc/Hardware.h"
+#include "./userCode/inc/Clock.h"
+#include "./userCode/inc/Lcd.h"
+#include "./userCode/inc/StringDisplay.h"
 
-// Define a counter to keep track of milliseconds
-static uint16_t millisecondCounter = 0;
+// #include <LCD.h>
 
-void Task00()
+// Example task functions
+void LedBlinkTask(void)
 {
-	// Increment the millisecond counter
-	millisecondCounter++;
-
-	// If 1 second has elapsed (1000 milliseconds), call updateClock and reset the counter
-	if ((millisecondCounter % 1000) == 0)
-	{
-		updateClock();
-		millisecondCounter = 0;
-	}
-
-	if ((millisecondCounter % 200) == 0)
-	{
-		toggleLed(PIN_5);
-	}
+	// Toggle LED1
+	toggleLed();
 }
 
-void Task08()
+void UpadteSecondDisplay(void)
 {
-	
+	updateClock();
+	printTimeDisplay(getTime());
 }
 
-void Task11()
-{
-	// serialPrintInt(getTime().hours);
-	// serialPrint(":");
-	// serialPrintInt(getTime().minutes);
-	// serialPrint(":");
-	// serialPrintInt(getTime().seconds);
-	// serialPrintln(",");
-
-	// serialPrintInt((int)getPressedButton());
-	serialPrintInt((int)readADC());
-}
-
-// main routine
-void main(void)
+int main(void)
 {
 	initMSP(); // Initialize MSP
 
+	initHardware();
+	lcdInit(); // Initialize LCD
+	lcdEnable(1);
+	lcdCursorBlink(0);
+	lcdCursorShow(0);
+
 	initScheduler();
 
-	initHardware();
+	addTaskToScheduler(LedBlinkTask, 200);		   // Add Task1 to run every 200 ms
+	addTaskToScheduler(UpadteSecondDisplay, 1000); // Add Task1 to run every 200
 
-	 // Initialize the LCD
-    lcdInit();
+	runScheduler();
 
-    // Clear the LCD display
-    lcdClear();
-
-    // Set the cursor to the beginning of the first row
-    lcdSetCursor(0, 0);
-
-    // Display "Hello, World!" on the first row
-    const char *message = "Hello, World!";
-    while (*message) {
-        lcdSendData(*message++);
-    }
-
-    // Set the cursor to the beginning of the second row
-    lcdSetCursor(1, 0);
-
-    // Display "MSP430 Rocks!" on the second row
-    message = "MSP430 Rocks!";
-    while (*message) {
-        lcdSendData(*message++);
-    }
-
+	return 0;
 }

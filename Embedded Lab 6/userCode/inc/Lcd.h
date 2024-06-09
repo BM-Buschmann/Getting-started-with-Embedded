@@ -1,13 +1,14 @@
 #ifndef LCD_H
 #define LCD_H
 
-#include <stdint.h>
-
 // Function prototypes
 void lcdInit(void);
-void lcdSendCommand(uint8_t cmd);
-void lcdSendData(uint8_t data);
-void lcdSetCursor(uint8_t row, uint8_t col);
+void lcdEnable(unsigned char on);
+void lcdCursorSet(unsigned char x, unsigned char y);
+void lcdCursorShow(unsigned char on);
+void lcdCursorBlink(unsigned char on);
 void lcdClear(void);
-
+void lcdPutChar(char character);
+void lcdPutText(const char *text);
+void lcdPutNumber(int number);
 #endif // LCD_H
