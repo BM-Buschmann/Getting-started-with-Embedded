@@ -1,6 +1,8 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
+#include <stdint.h>
+
 // Enumeration for GPIO pins
 typedef enum {
     PIN_0,

@@ -1,7 +1,11 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
+#include <stdint.h>
+
 #define MaxTasks 5
+
+
 
 typedef void (*TaskFunction)(void);
 

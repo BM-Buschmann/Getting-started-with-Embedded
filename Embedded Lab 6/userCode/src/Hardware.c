@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <msp430.h>
+#include <msp430g2553.h>
 
 #include "../inc/Hardware.h"
 
@@ -83,9 +83,6 @@ BUTTON getPressedButton()
     }
 }
 
-// Global variable to store ADC value
-volatile uint16_t ADC_Value;
-
 /**
  * @brief Initializes the Analog to Digital Converter (ADC).
  *
@@ -95,14 +92,10 @@ volatile uint16_t ADC_Value;
  */
 void initADC()
 {
-    // Configure ADC settings
-    ADC10CTL0 = ADC10ON + ADC10SHT_2; // Power ADC on; use 16 clocks as sample & hold time
-    ADC10AE0 |= BIT6;                 // Enable P1.6 as AD-input
-    ADC10CTL1 = INCH_6;               // Select channel 6
-    ADC10DTC1 = 1;                    // Enable 1 conversion
-    ADC10SA = (uint16_t)&ADC_Value;   // Set DMA destination address
-    ADC10CTL0 |= ENC;                 // Enable conversion
-    ADC10CTL0 |= ADC10SC;             // Start conversion
+    ADC10CTL1 = INCH_6 + ADC10DIV_0 + CONSEQ_2 + SHS_0;               // Select channel 6
+    ADC10CTL0 = SREF_0 + ADC10SHT_2 + MSC + ADC10ON; // Power ADC on; use 16 clocks as sample & hold time
+    ADC10AE0 = BIT6;                 // Enable P1.6 as AD-input
+    ADC10DTC1 = 2;                    // Enable 1 conversion
 }
 
 /**
@@ -114,9 +107,10 @@ void initADC()
  */
 uint16_t readADC()
 {
-    while (ADC10CTL1 & ADC10BUSY) // Wait until result is ready
-    {
-    }
+    ADC10CTL0 &= ~ENC; // Disable ADC conversion
+	while (ADC10CTL1 & BUSY)
+		;						// Wait until ADC is finished with the conversion
+	ADC10CTL0 |= ENC + ADC10SC; // Start ADC conversion
 
-    return ADC_Value;
+    return ADC10MEM;
 }

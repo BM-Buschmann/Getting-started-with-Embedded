@@ -1,121 +1,130 @@
+#include <msp430g2553.h>
 #include <stdint.h>
-#include <msp430.h>
-
 #include "../inc/Lcd.h"
 
-#define LCD_NUM_COLS	16
+#define LCD_NUM_COLS      16
 
-#define LCD_CTRL_DIR    P2DIR
-#define LCD_CTRL        P2OUT
+#define LCD_CTRL_DIR      P2DIR
+#define LCD_CTRL          P2OUT
 
-#define LCD_DATA_DIR    P3DIR
-#define LCD_DATA_OUT    P3OUT
-#define LCD_DATA_IN     P3IN
+#define LCD_DATA_DIR      P3DIR
+#define LCD_DATA_OUT      P3OUT
+#define LCD_DATA_IN       P3IN
 
-#define LCD_RS          BIT0
-#define LCD_RW          BIT1
-#define LCD_EN          BIT2
+#define LCD_RS_BIT        BIT0
+#define LCD_RW_BIT        BIT1
+#define LCD_EN_BIT        BIT2
 
-#define CMD_DISP_CLEAR  0x01
-#define CMD_EM_SET      0x04
-#define CMD_DISP_CTRL   0x08
-#define CMD_FUNC_SET    0x20
-#define CMD_DDRAM_WRITE 0x80
+#define LCD_CMD_CLEAR_DISPLAY  0x01
+#define LCD_CMD_ENTRY_MODE_SET 0x04
+#define LCD_CMD_DISPLAY_CONTROL 0x08
+#define LCD_CMD_FUNCTION_SET  0x20
+#define LCD_CMD_DDRAM_WRITE   0x80
 
-#define ID_FLAG         BIT1
+#define LCD_ENTRY_MODE_INCREMENT BIT1
 
-#define F_FLAG          BIT2
-#define N_FLAG          BIT3
-#define DL_FLAG         BIT4
+#define LCD_FUNCTION_SET_F       BIT2
+#define LCD_FUNCTION_SET_N       BIT3
+#define LCD_FUNCTION_SET_DL      BIT4
 
-#define BLINK_FLAG      BIT0
-#define CURSOR_FLAG     BIT1
-#define DISP_FLAG       BIT2
+#define LCD_DISPLAY_BLINK_ON     BIT0
+#define LCD_DISPLAY_CURSOR_ON    BIT1
+#define LCD_DISPLAY_ON           BIT2
 
-#define BUSY_FLAG       BIT7
+#define LCD_STATUS_BUSY          BIT7
 
-#define DATA_MASK       0x0f
-#define DATA_OFFSET     4
+#define LCD_DATA_MASK            0x0f
+#define LCD_DATA_OFFSET          4
 
-static uint8_t displayCtrl;
+static uint8_t displayControl;
 
-/* Read 8-bit from the LCD. */
+/**
+ * @brief Read 8-bit from the LCD.
+ * 
+ * @param rs Register select value.
+ * @return 8-bit data read from the LCD.
+ */
 static uint8_t read8Bit(char rs)
 {
     uint8_t tmp;
 
-    LCD_DATA_DIR &= ~(DATA_MASK << DATA_OFFSET);
-    LCD_CTRL |= LCD_RW;
+    LCD_DATA_DIR &= ~(LCD_DATA_MASK << LCD_DATA_OFFSET);
+    LCD_CTRL |= LCD_RW_BIT;
 
     if (rs)
-        LCD_CTRL |= LCD_RS;
+        LCD_CTRL |= LCD_RS_BIT;
     else
-        LCD_CTRL &= ~LCD_RS;
+        LCD_CTRL &= ~LCD_RS_BIT;
 
-    LCD_CTRL |= LCD_EN;
-    /* Wait for 2 µs to satisfy t_cycE and t_DDR. */
+    LCD_CTRL |= LCD_EN_BIT;
     __delay_cycles(32);
-    tmp = (LCD_DATA_IN & (DATA_MASK << DATA_OFFSET)) >> DATA_OFFSET;
-    LCD_CTRL &= ~LCD_EN;
+    tmp = (LCD_DATA_IN & (LCD_DATA_MASK << LCD_DATA_OFFSET)) >> LCD_DATA_OFFSET;
+    LCD_CTRL &= ~LCD_EN_BIT;
 
-    LCD_CTRL |= LCD_EN;
-    /* Wait for 2 µs to satisfy t_cycE and t_DDR. */
+    LCD_CTRL |= LCD_EN_BIT;
     __delay_cycles(32);
-    tmp = (tmp << DATA_OFFSET) | (LCD_DATA_IN >> DATA_OFFSET);
-    LCD_CTRL &= ~LCD_EN;
+    tmp = (tmp << LCD_DATA_OFFSET) | (LCD_DATA_IN >> LCD_DATA_OFFSET);
+    LCD_CTRL &= ~LCD_EN_BIT;
 
     return tmp;
 }
 
-/* Write 4-bit to the LCD. */
+/**
+ * @brief Write 4-bit to the LCD.
+ * 
+ * @param rs Register select value.
+ * @param data 4-bit data to write to the LCD.
+ */
 static void write4Bit(char rs, uint8_t data)
 {
-    LCD_DATA_DIR |= (DATA_MASK << DATA_OFFSET);
-    LCD_CTRL &= ~LCD_RW;
+    LCD_DATA_DIR |= (LCD_DATA_MASK << LCD_DATA_OFFSET);
+    LCD_CTRL &= ~LCD_RW_BIT;
 
     if (rs)
-        LCD_CTRL |= LCD_RS;
+        LCD_CTRL |= LCD_RS_BIT;
     else
-        LCD_CTRL &= ~LCD_RS;
+        LCD_CTRL &= ~LCD_RS_BIT;
 
-    LCD_CTRL |= LCD_EN;
-    /* Wait for 2 µs to satisfy t_cycE. */
+    LCD_CTRL |= LCD_EN_BIT;
     __delay_cycles(32);
-    LCD_DATA_OUT = (data << DATA_OFFSET);
-    LCD_CTRL &= ~LCD_EN;
+    LCD_DATA_OUT = (data << LCD_DATA_OFFSET);
+    LCD_CTRL &= ~LCD_EN_BIT;
 }
 
-/* Write 8-bit to the LCD. */
+/**
+ * @brief Write 8-bit to the LCD.
+ * 
+ * @param rs Register select value.
+ * @param rw Read/Write value.
+ * @param data 8-bit data to write to the LCD.
+ */
 static void write8Bit(char rs, char rw, uint8_t data)
 {
-    write4Bit(rs, data >> DATA_OFFSET);
-    write4Bit(rs, data & DATA_MASK);
+    write4Bit(rs, data >> LCD_DATA_OFFSET);
+    write4Bit(rs, data & LCD_DATA_MASK);
 }
 
-/*
- * Send a command to the LCD.
- *
- * This function blocks until the LCD is ready.
+/**
+ * @brief Send a command to the LCD. This function blocks until the LCD is ready.
+ * 
+ * @param rs Register select value.
+ * @param data Command data to send to the LCD.
  */
 static void sendCmd(char rs, uint8_t data)
 {
-    /* Wait until the LCD is ready. */
-    while (read8Bit(0) & BUSY_FLAG);
+    while (read8Bit(0) & LCD_STATUS_BUSY);
 
     write8Bit(rs, 0, data);
 }
 
+/**
+ * @brief Initialize the LCD.
+ */
 void lcdInit(void)
 {
-    LCD_CTRL_DIR = LCD_RS | LCD_RW | LCD_EN;
-    LCD_CTRL &= ~(LCD_RS | LCD_RW | LCD_EN);
+    LCD_CTRL_DIR = LCD_RS_BIT | LCD_RW_BIT | LCD_EN_BIT;
+    LCD_CTRL &= ~(LCD_RS_BIT | LCD_RW_BIT | LCD_EN_BIT);
 
-    /*
-     * The initialization sequence stated in LCD_MODUL_16X2.pdf and especially
-     * in http://lcd-linux.sourceforge.net/pdfdocs/hd44780.pdf is used.
-     */
-
-    /* Wait for 50 ms to ensure the LCD is powered up. */
     __delay_cycles(800000);
 
     write4Bit(0, 0x3);
@@ -130,74 +139,106 @@ void lcdInit(void)
     write4Bit(0, 0x2);
     __delay_cycles(2400);
 
-    /* Set interface and LCD parameter (4-bit, 5x8 dots, 2 lines). */
-    write8Bit(0, 0, CMD_FUNC_SET | N_FLAG);
+    write8Bit(0, 0, LCD_CMD_FUNCTION_SET | LCD_FUNCTION_SET_N);
 
-    /* Enable display. */
-    displayCtrl = DISP_FLAG;
-    sendCmd(0, CMD_DISP_CTRL | displayCtrl);
+    displayControl = LCD_DISPLAY_ON;
+    sendCmd(0, LCD_CMD_DISPLAY_CONTROL | displayControl);
 
-    /* Clear display. */
-    sendCmd(0, CMD_DISP_CLEAR);
+    sendCmd(0, LCD_CMD_CLEAR_DISPLAY);
 
-    /* Set cursor move direction (increment). */
-    sendCmd(0, CMD_EM_SET | ID_FLAG);
+    sendCmd(0, LCD_CMD_ENTRY_MODE_SET | LCD_ENTRY_MODE_INCREMENT);
 }
 
+/**
+ * @brief Enable or disable the LCD display.
+ * 
+ * @param on 1 to enable the display, 0 to disable.
+ */
 void lcdEnable(unsigned char on)
 {
     if (on)
-        displayCtrl |= DISP_FLAG;
+        displayControl |= LCD_DISPLAY_ON;
     else
-        displayCtrl &= ~DISP_FLAG;
+        displayControl &= ~LCD_DISPLAY_ON;
 
-    sendCmd(0, CMD_DISP_CTRL | displayCtrl);
+    sendCmd(0, LCD_CMD_DISPLAY_CONTROL | displayControl);
 }
 
+/**
+ * @brief Set the cursor position on the LCD.
+ * 
+ * @param x The x-coordinate (column) of the cursor position.
+ * @param y The y-coordinate (row) of the cursor position.
+ */
 void lcdCursorSet(unsigned char x, unsigned char y)
 {
     if (x >= LCD_NUM_COLS)
         return;
 
     if (!y)
-        sendCmd(0, CMD_DDRAM_WRITE | x);
+        sendCmd(0, LCD_CMD_DDRAM_WRITE | x);
     else if (y == 1)
-        sendCmd(0, CMD_DDRAM_WRITE | 0x40 | x);
+        sendCmd(0, LCD_CMD_DDRAM_WRITE | 0x40 | x);
 }
 
+/**
+ * @brief Show or hide the cursor on the LCD.
+ * 
+ * @param on 1 to show the cursor, 0 to hide.
+ */
 void lcdCursorShow(unsigned char on)
 {
     if (on)
-        displayCtrl |= CURSOR_FLAG;
+        displayControl |= LCD_DISPLAY_CURSOR_ON;
     else
-        displayCtrl &= ~CURSOR_FLAG;
+        displayControl &= ~LCD_DISPLAY_CURSOR_ON;
 
-    sendCmd(0, CMD_DISP_CTRL | displayCtrl);
+    sendCmd(0, LCD_CMD_DISPLAY_CONTROL | displayControl);
 }
 
+/**
+ * @brief Enable or disable cursor blinking on the LCD.
+ * 
+ * @param on 1 to enable blinking, 0 to disable.
+ */
 void lcdCursorBlink(unsigned char on)
 {
     if (on)
-        displayCtrl |= BLINK_FLAG;
+        displayControl |= LCD_DISPLAY_BLINK_ON;
     else
-        displayCtrl &= ~BLINK_FLAG;
+        displayControl &= ~LCD_DISPLAY_BLINK_ON;
 
-    sendCmd(0, CMD_DISP_CTRL | displayCtrl);
+    sendCmd(0, LCD_CMD_DISPLAY_CONTROL | displayControl);
 }
 
+/**
+ * @brief Clear the LCD display.
+ */
 void lcdClear(void)
 {
-    sendCmd(0, CMD_DISP_CLEAR);
+    sendCmd(0, LCD_CMD_CLEAR_DISPLAY);
 }
 
+/**
+ * @brief Display a single character on the LCD.
+ * 
+ * @param character The character to display.
+ */
 void lcdPutChar(char character)
 {
     sendCmd(1, character);
 }
 
+/**
+ * @brief Display a string of text on the LCD.
+ * 
+ * @param text The null-terminated string to display.
+ */
 void lcdPutText(const char *text)
 {
-    unsigned char i = 0;
+    unsigned char i;
+
+    i = 0;
 
     while (*text && i < LCD_NUM_COLS) {
         lcdPutChar(*text++);
@@ -205,6 +246,11 @@ void lcdPutText(const char *text)
     }
 }
 
+/**
+ * @brief Display a number on the LCD.
+ * 
+ * @param number The number to display.
+ */
 void lcdPutNumber(int number)
 {
     unsigned char i;
@@ -217,19 +263,20 @@ void lcdPutNumber(int number)
 
     i = 0;
 
-    /*
-     * Extract decimal places in reverse order and convert them to
-     * characters.
-     */
     do {
         tmp[i] = '0' + (number % 10);
         number = number / 10;
         i++;
     } while (number > 0);
 
-    /* Put converted characters in reverse order to restore original order. */
     while (i > 0) {
         i--;
         lcdPutChar(tmp[i]);
     }
+}
+
+void lcdSendString(uint8_t row, uint8_t col, const char *string) {
+    lcdCursorSet(col, row); // Set the cursor position
+    
+    lcdPutText(string);
 }

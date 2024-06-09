@@ -1,6 +1,8 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
+#include <stdint.h>
+
 // Structure to hold time information
 typedef struct {
     uint8_t hours;   // Hours (0-23)
