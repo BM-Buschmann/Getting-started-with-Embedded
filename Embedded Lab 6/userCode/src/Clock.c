@@ -1,85 +1,87 @@
-#include <stdint.h>
+/**
+ * @file    Clock.c
+ * @brief   Functions for stopwatch control.
+ *
+ * This file contains implementations of functions related to stopwatch control.
+ * It includes functions to initialize the stopwatch, update the stopwatch time,
+ * start, stop, and reset the stopwatch, and retrieve the current stopwatch time.
+ *
+ * @date    25.05.2024
+ * @authors 
+ * - Bjoern Metzger
+ * - Daniel Korobow
+ * @version 1.0
+ */
 
+#include <stdint.h>
 #include "../inc/Clock.h"
 
-// Global variables to hold time and stopwatch status
-static Time currentTime = {0, 0, 0};
-static Time stopwatchStartTime = {0, 0, 0};
+// Global variables to hold stopwatch time and status
+static Time stopwatchTime = {0, 0, 0};
 static uint8_t stopwatchRunning = 0;
 
+/**
+ * @brief Initializes the stopwatch by setting the time to 0 and stopping it.
+ */
 void init(void) {
-    // Initialize RTC module or any other necessary initialization
+    stopwatchTime.hours = 0;
+    stopwatchTime.minutes = 0;
+    stopwatchTime.seconds = 0;
+    stopwatchRunning = 0;
 }
 
-void updateClock(void) {
-    // Increment seconds and handle overflow
-    currentTime.seconds++;
-    if (currentTime.seconds >= 60) {
-        currentTime.seconds = 0;
-        currentTime.minutes++;
-        if (currentTime.minutes >= 60) {
-            currentTime.minutes = 0;
-            currentTime.hours++;
-            if (currentTime.hours >= 24) {
-                currentTime.hours = 0;
+/**
+ * @brief Updates the stopwatch time if it is running.
+ *
+ * This function increments the seconds, and if an overflow occurs,
+ * it updates the minutes and hours accordingly.
+ */
+void updateStopwatch(void) {
+    if (stopwatchRunning) {
+        stopwatchTime.seconds++;
+        if (stopwatchTime.seconds >= 60) {
+            stopwatchTime.seconds = 0;
+            stopwatchTime.minutes++;
+            if (stopwatchTime.minutes >= 60) {
+                stopwatchTime.minutes = 0;
+                stopwatchTime.hours++;
+                if (stopwatchTime.hours >= 24) {
+                    stopwatchTime.hours = 0;
+                }
             }
         }
     }
 }
 
-Time getTime(void) {
-    // Return the current time
-    return currentTime;
-}
-
-void setTime(uint8_t hours, uint8_t minutes, uint8_t seconds) {
-    // Set the current time to a predefined value
-    currentTime.hours = hours;
-    currentTime.minutes = minutes;
-    currentTime.seconds = seconds;
-}
-
+/**
+ * @brief Starts the stopwatch.
+ */
 void startStopwatch(void) {
-    // Start the stopwatch
-    stopwatchStartTime = currentTime;
     stopwatchRunning = 1;
 }
 
+/**
+ * @brief Stops the stopwatch.
+ */
 void stopStopwatch(void) {
-    // Stop the stopwatch
     stopwatchRunning = 0;
 }
 
+/**
+ * @brief Resets the stopwatch time to 0 and stops it.
+ */
 void resetStopwatch(void) {
-    // Reset the stopwatch
-    stopwatchStartTime = currentTime;
+    stopwatchRunning = 0;
+    stopwatchTime.hours = 0;
+    stopwatchTime.minutes = 0;
+    stopwatchTime.seconds = 0;
 }
 
-Time getStopwatchElapsedTime(void) {
-    // Calculate elapsed time if stopwatch is running
-    Time elapsedTime = {0, 0, 0};
-    if (stopwatchRunning) {
-        // Calculate elapsed time since stopwatch start time
-        uint8_t secondsElapsed = currentTime.seconds - stopwatchStartTime.seconds;
-        uint8_t minutesElapsed = currentTime.minutes - stopwatchStartTime.minutes;
-        uint8_t hoursElapsed = currentTime.hours - stopwatchStartTime.hours;
-        
-        // Handle borrow
-        if (secondsElapsed < 0) {
-            secondsElapsed += 60;
-            minutesElapsed--;
-        }
-        if (minutesElapsed < 0) {
-            minutesElapsed += 60;
-            hoursElapsed--;
-        }
-        if (hoursElapsed < 0) {
-            hoursElapsed += 24;
-        }
-        
-        elapsedTime.hours = hoursElapsed;
-        elapsedTime.minutes = minutesElapsed;
-        elapsedTime.seconds = secondsElapsed;
-    }
-    return elapsedTime;
+/**
+ * @brief Gets the current stopwatch time.
+ *
+ * @return The current time of the stopwatch.
+ */
+Time getStopwatchTime(void) {
+    return stopwatchTime;
 }

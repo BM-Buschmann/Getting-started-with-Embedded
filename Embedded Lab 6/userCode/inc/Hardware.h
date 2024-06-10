@@ -41,13 +41,13 @@ typedef enum {
     CHANNEL_7
 } ADC_Channel;
 
-void initHardware();
-void initLed();
-void toggleLed();
-void setLedState(LED_STATE state);
-void initButtons();
-BUTTON getPressedButton();
-void initADC();
-uint16_t readADC();
+extern void initHardware();
+extern void initLed();
+extern void toggleLed();
+extern void setLedState(LED_STATE state);
+extern void initButtons();
+extern BUTTON getPressedButton();
+extern void initADC();
+extern uint16_t readADC();
 
 #endif // HARDWARE_H

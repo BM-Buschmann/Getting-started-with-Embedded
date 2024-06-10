@@ -1,3 +1,16 @@
+/**
+ * @file    Lcd.c
+ * @brief   Library for interfacing with a 16x2 character LCD.
+ *
+ * This file contains functions for initializing and controlling a 16x2 character LCD
+ * using the MSP430G2553 microcontroller.
+ *
+ * @date    25.05.2024
+ * @version 1.0
+ */
+
+
+
 #include <msp430g2553.h>
 #include <stdint.h>
 #include "../inc/Lcd.h"

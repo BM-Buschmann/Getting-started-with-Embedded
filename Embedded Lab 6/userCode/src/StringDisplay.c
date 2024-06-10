@@ -1,3 +1,17 @@
+/**
+ * @file    StringDisplay.c
+ * @brief   Functions for displaying various types of information on an LCD screen.
+ *
+ * This file contains implementations of functions for initializing the LCD screen,
+ * displaying time, ADC values, and voltage values, as well as converting numbers to strings.
+ *
+ * @date    25.05.2024
+ * @authors 
+ * - Bjoern Metzger
+ * - Daniel Korobow
+ * @version 1.0
+ */
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,6 +31,9 @@ typedef enum
     true,
 } BOOL;
 
+/**
+ * @brief Initializes the string display by setting up the LCD.
+ */
 void initStringDisplay()
 {
     lcdInit(); // Initialize LCD
@@ -28,6 +45,12 @@ void initStringDisplay()
     lcdSendString(0, 0, "Labor 6");
 }
 
+/**
+ * @brief Converts a number to a string with two digits.
+ * 
+ * @param num The number to convert.
+ * @param str The buffer to store the resulting string.
+ */
 void convertToDigitString(uint8_t num, char *str)
 {
     if (num < 10)
@@ -40,6 +63,11 @@ void convertToDigitString(uint8_t num, char *str)
     }
 }
 
+/**
+ * @brief Displays the current time on the LCD.
+ * 
+ * @param current The current time to display.
+ */
 void printTimeDisplay(Time current)
 {
     char timeStr[9];    // HH:MM:SS\0
@@ -127,7 +155,6 @@ void intToStr(int num, char *str)
     }
 }
 
-
 /**
  * @brief Converts a float value to a string.
  * 
@@ -154,9 +181,13 @@ void floatToString(float value, char *buffer, unsigned char precision)
     }
 }
 
+/**
+ * @brief Displays the ADC value on the LCD.
+ * 
+ * @param adcValue The ADC value to display.
+ */
 void printAdcDisplay(uint16_t adcValue)
 {
-
     char alignedText[4 + 1];
     char adcString[25];
 
@@ -168,21 +199,27 @@ void printAdcDisplay(uint16_t adcValue)
     lcdSendString(1, 8, alignedText);
 }
 
+/**
+ * @brief Displays the voltage value on the LCD.
+ * 
+ * @param voltageValue The voltage value to display.
+ */
 void printVoltageDisplay(float voltageValue)
 {
     char alignedText[4 + 1];
     char floatString[20];
 
-    // Convert float to string with 2 decimal places
+    // Convert float to string with 1 decimal place
     floatToString(voltageValue, floatString, 1);
 
     // Get the right-aligned string
     getRightAlignedString(floatString, 4, alignedText);
 
     lcdSendString(1, 12, "    ");
-    // Display the right-aligned ADC value on the LCD
+    // Display the right-aligned voltage value on the LCD
     lcdSendString(1, 12, alignedText);
 }
+
 #define OMEGA 244
 
 // Gage values and their corresponding strings
@@ -192,9 +229,9 @@ static const uint16_t gageValues[7] = {125, 250, 375, 500, 625, 750, 875, 1023};
  * @brief Converts a value to a gage string.
  * 
  * @param value The input value to convert.
- * @return char* The gage string.
+ * @param gageStr The buffer to store the resulting gage string.
  */
-void  convertToGage(uint16_t value, char* gageStr)
+void convertToGage(uint16_t value, char *gageStr)
 {
     char omega = 0xF4; // Omega symbol character code
 
@@ -212,18 +249,20 @@ void  convertToGage(uint16_t value, char* gageStr)
 
     // Create the gage string
     memset(gageStr, ' ', 8); // Fill with spaces
-    gageStr[col] = omega; // Place the omega symbol at the calculated column
-
+    gageStr[col] = omega;    // Place the omega symbol at the calculated column
 }
 
-void printGageDisplay(uint16_t adcValue){
-    char gageString[8+1] = {};
+/**
+ * @brief Displays the gage representation of the ADC value on the LCD.
+ * 
+ * @param adcValue The ADC value to display as a gage.
+ */
+void printGageDisplay(uint16_t adcValue)
+{
+    char gageString[8 + 1] = {};
 
     convertToGage(adcValue, gageString);
 
-    // Display the right-aligned ADC value on the LCD
+    // Display the gage representation on the LCD
     lcdSendString(1, 0, gageString);
-
-    //lcdCursorSet(1, 1);
-    //lcdPutChar(OMEGA);
 }

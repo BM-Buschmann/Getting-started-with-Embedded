@@ -3,56 +3,31 @@
 
 #include <stdint.h>
 
-// Structure to hold time information
+// Define the Time structure
 typedef struct {
-    uint8_t hours;   // Hours (0-23)
-    uint8_t minutes; // Minutes (0-59)
-    uint8_t seconds; // Seconds (0-59)
+    uint8_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
 } Time;
 
-/**
- * @brief Updates the clock every 1 second
- * 
- * @note this methode needs to be called every second otherwise the clock is not in sync
- */
-extern void updateClock(void);
+// Function to initialize the stopwatch
+extern void init(void);
 
-/**
- * @brief Gets the current time as a Time structure
- * 
- * @return Time structure containing current time
- */
-extern Time getTime(void);
+// Function to update the stopwatch (to be called periodically)
+extern void updateStopwatch(void);
 
-/**
- * @brief Sets the current time to a predefined value
- * 
- * @param hours Hours (0-23)
- * @param minutes Minutes (0-59)
- * @param seconds Seconds (0-59)
- */
-extern void setTime(uint8_t hours, uint8_t minutes, uint8_t seconds);
-
-/**
- * @brief Starts the stopwatch
- */
+// Function to start the stopwatch
 extern void startStopwatch(void);
 
-/**
- * @brief Stops the stopwatch
- */
+// Function to stop the stopwatch
 extern void stopStopwatch(void);
 
-/**
- * @brief Resets the stopwatch
- */
+// Function to reset the stopwatch
 extern void resetStopwatch(void);
 
-/**
- * @brief Gets the elapsed time of the stopwatch
- * 
- * @return Time structure containing elapsed time
- */
-extern Time getStopwatchElapsedTime(void);
+// Function to get the current stopwatch time
+extern Time getStopwatchTime(void);
+
+
 
 #endif // CLOCK_H
